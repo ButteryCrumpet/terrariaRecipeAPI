@@ -25,7 +25,7 @@ SECRET_KEY = '_an5-wj$=aa$1bsous!j&c2tddp6%3gx-d^lp#1cpxyy#)o0)v'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'recipeAPI',
 ]
 
 MIDDLEWARE = [
@@ -75,8 +77,12 @@ WSGI_APPLICATION = 'TerrariaAPI.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'terrariaapi',
+        'USER': 'simon',
+        'PASSWORD': 'hgiels12',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
