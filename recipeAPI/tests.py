@@ -18,16 +18,22 @@ def test2():
 def test3():
     from recipeAPI.models import Recipe
     from recipeAPI.serializers import RecipeSerializer
+    from rest_framework.renderers import JSONRenderer
+    from rest_framework.parsers import JSONParser
+    from django.utils.six import BytesIO
 
-    data = {
-        'ingredients': [{'item': 'boobs', 'amount': 3}, {'item': 'my penis', 'amount': 1}],
-        'item': {'name': 'super orgasms'},
-        'station': {'name': 'back alley'},
-    }
+    r = Recipe.objects.get()
+    r = RecipeSerializer(r)
+    r = JSONRenderer().render(r.data)
+    r = BytesIO(r)
+    r = JSONParser().parse(r)
 
-    f = RecipeSerializer(data=data)
-    if f.is_valid():
-        f.save()
+    print(r)
+    s = RecipeSerializer(data=r)
+    Recipe.objects.all().delete()
+
+    if s.is_valid():
+        s.save()
     else:
         print('you dun goofed')
 
@@ -41,19 +47,19 @@ def delete_all():
 def remake_example():
     from recipeAPI.models import Recipe, Ingredient, Item
 
-    a = Item.objects.create(name='my penis', image='dick.pic', is_station=False)
-    b = Item.objects.create(name='boobs', image='rack.jpg', is_station=False)
-    c = Item.objects.create(name='orgasm', image='o.face', is_station=False)
-    d = Item.objects.create(name='back alley', image='dump.ster', is_station=True)
+    a = Item.objects.get_or_create(name='my penis', image='dick.pic')
+    b = Item.objects.get_or_create(name='boobs', image='rack.jpg')
+    c = Item.objects.get_or_create(name='orgasm', image='o.face')
+    d = Item.objects.get_or_create(name='back alley', image='dump.ster')
 
-    i1 = Ingredient.objects.create(item=b, amount=2)
-    i2 = Ingredient.objects.create(item=a, amount=1)
+    i1 = Ingredient.objects.get_or_create(item=a[0], amount=1)
+    i2 = Ingredient.objects.get_or_create(item=b[0], amount=2)
     
     r = Recipe.objects.create(
-        item=c,
+        item=c[0],
         amount=200,
-        station=d
+        station=d[0]
     )
 
-    r.ingredients.add(i1)
-    r.ingredients.add(i2)
+    r.ingredients.add(i1[0])
+    r.ingredients.add(i2[0])
