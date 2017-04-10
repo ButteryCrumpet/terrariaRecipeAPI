@@ -6,14 +6,14 @@ class ItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ('name', 'image', 'is_station')
+        fields = ('name', 'image')
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
         fields = ('item', 'amount')
 
-class RecipeSerializer(serializers.Serializer):
+class WriteableRecipeSerializer(serializers.Serializer):
     item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
     ingredients = IngredientSerializer(many=True)
     station = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
@@ -28,6 +28,24 @@ class RecipeSerializer(serializers.Serializer):
             recipe.ingredients.add(ingredient[0])
 
         return recipe
+
+    class Meta:
+        model = Recipe
+        fields = ('item', 'amount', 'ingredients', 'station')
+
+class IngredientFullSerializer(serializers.Serializer):
+    item = ItemSerializer(read_only=True)
+    amount = serializers.IntegerField()
+
+    class Meta:
+        model = Ingredient
+        fields = ('item', 'amount')
+
+
+class RecipeFullSerializer(serializers.Serializer):
+    item = ItemSerializer(read_only=True)
+    ingredients = IngredientFullSerializer(many=True, read_only=True)
+    station = ItemSerializer(read_only=True)
 
     class Meta:
         model = Recipe

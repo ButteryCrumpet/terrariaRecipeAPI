@@ -5,6 +5,13 @@ class Item(models.Model):
     name = models.CharField(primary_key=True, max_length=100)
     image = models.CharField(max_length=150)
 
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(Item, self).save(*args, **kwargs)
+
+    def clean(self):
+        self.name = self.name.replace(' ', '_')
+
     def __str__(self):
         return self.name
 
@@ -23,3 +30,4 @@ class Recipe(models.Model):
 
     def __str__(self):
         return 'Recipe: ' + str(self.item)
+    
