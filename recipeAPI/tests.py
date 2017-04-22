@@ -1,12 +1,16 @@
 from django.test import TestCase
 
+MY_AUTH_TOKEN = '1ea7ec39a27be022a048ffde1dd4ed7d7ebb4e47'
+
 # Create your tests here.
 def test1():
     from recipeAPI.models import Recipe
-    from recipeAPI.serializers import RecipeSerializer
+    from recipeAPI.serializers import WriteableRecipeSerializer
+    data = {'item': 'sex', 'ingredients':[{'item':'my_penis', 'amount':1}, {'item': 'boobs', 'amount': 1}], 'station':'boobs'}
+    inst = Recipe.objects.get(item='sex')
+    s = WriteableRecipeSerializer(inst, data=data)
+    return s
 
-    r = Recipe.objects.get()
-    return [RecipeSerializer(r), r]
 
 def test2():
     from recipeAPI.models import Item
@@ -37,6 +41,17 @@ def test3():
     else:
         print('you dun goofed')
 
+def test4():
+    import requests
+    import json
+    url = 'http://127.0.0.1:8000/manager/recipe/sex/'
+    headers = {'Authorization': 'Token 1ea7ec39a27be022a048ffde1dd4ed7d7ebb4e47', 'Content-Type':'application/json'}
+    raw_data = {'item': 'sex', 'ingredients':[{'item':'my_penis', 'amount':1}], 'station':'boobs'}
+    data = json.dumps(raw_data)
+    r = requests.post(url, headers=headers, data=data)
+    return r
+
+
 def delete_all():
     from recipeAPI.models import Recipe, Ingredient, Item
 
@@ -54,7 +69,7 @@ def remake_example():
 
     i1 = Ingredient.objects.get_or_create(item=a[0], amount=1)
     i2 = Ingredient.objects.get_or_create(item=b[0], amount=2)
-    
+
     r = Recipe.objects.create(
         item=c[0],
         amount=200,

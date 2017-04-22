@@ -1,31 +1,40 @@
 from rest_framework import serializers
 from recipeAPI.models import Item, Recipe, Ingredient
 
-class ItemSerializer(serializers.ModelSerializer):
-    #recipe = serializers.StringRelatedField(read_only=True)
+import logging
+logger = logging.getLogger('print')
 
+class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = ('name', 'image')
 
 class IngredientSerializer(serializers.ModelSerializer):
+
+    def to_internal_value(self, data):
+        logger.info(data)
+        return serializers.ModelSerializer.to_internal_value(self, data)
+
     class Meta:
         model = Ingredient
         fields = ('item', 'amount')
 
-class WriteableRecipeSerializer(serializers.Serializer):
+#must be pure dict/from JSON post request
+class WriteableRecipeSerializer(serializers.ModelSerializer):
     item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
     ingredients = IngredientSerializer(many=True)
     station = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
 
     def create(self, validated_data):
+        logger.info(validated_data)
         ingredient_data = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(**validated_data)
+
         for ingredient in ingredient_data:
             ingredient_item = Item.objects.get(name=ingredient['item'])
             amount = ingredient['amount']
-            ingredient = Ingredient.objects.get_or_create(item=ingredient_item, amount=amount)
-            recipe.ingredients.add(ingredient[0])
+            ingredient, created = Ingredient.objects.get_or_create(item=ingredient_item, amount=amount)
+            recipe.ingredients.add(ingredient)
 
         return recipe
 
