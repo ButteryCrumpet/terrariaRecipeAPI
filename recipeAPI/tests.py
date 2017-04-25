@@ -52,12 +52,15 @@ def test4():
     return r
 
 
-def delete_all():
+def delete_all(item=True, recipe=True, ingredient=True):
     from recipeAPI.models import Recipe, Ingredient, Item
 
-    Item.objects.all().delete()
-    Recipe.objects.all().delete()
-    Ingredient.objects.all().delete()
+    if item == True:
+        Item.objects.all().delete()
+    if recipe == True:
+        Recipe.objects.all().delete()
+    if ingredient == True:
+        Ingredient.objects.all().delete()
 
 def remake_example():
     from recipeAPI.models import Recipe, Ingredient, Item

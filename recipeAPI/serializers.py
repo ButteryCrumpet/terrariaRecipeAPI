@@ -12,7 +12,6 @@ class ItemSerializer(serializers.ModelSerializer):
 class IngredientSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
-        logger.info(data)
         return serializers.ModelSerializer.to_internal_value(self, data)
 
     class Meta:
@@ -26,7 +25,6 @@ class WriteableRecipeSerializer(serializers.ModelSerializer):
     station = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
 
     def create(self, validated_data):
-        logger.info(validated_data)
         ingredient_data = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(**validated_data)
 

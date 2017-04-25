@@ -55,6 +55,7 @@ class ItemDetail(generics.RetrieveAPIView):
 
 class ItemCreate(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
+    parser_classes = (JSONParser,)
 
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
@@ -79,7 +80,7 @@ class ItemSearch(APIView):
     renderer_classes = (JSONRenderer, )
 
     def get(self, request, search_term, format=None):
-        items = Item.objects.filter(name__iregex=r'^(' + search_term + ')+')
+        items = Item.objects.filter(name__iregex=r'(' + search_term + ')+')
         serializer = ItemSerializer(items, many=True)
         return Response(serializer.data)
 
