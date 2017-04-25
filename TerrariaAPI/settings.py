@@ -26,7 +26,7 @@ SECRET_KEY = '_an5-wj$=aa$1bsous!j&c2tddp6%3gx-d^lp#1cpxyy#)o0)v'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['recipe-endpoints.herokuapp.com']
 
 
 # Application definition
