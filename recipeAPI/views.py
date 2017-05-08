@@ -87,8 +87,18 @@ class ItemSearch(APIView):
 class RecipeSearch(APIView):
     renderer_classes = (JSONRenderer, )
 
+    def search_recipes(self, search_term):
+        items = Item.objects.filter(name__iregex=r'(' + search_term + ')+')
+        recipes = []
+        for item in items:
+            try:
+                recipes.append(item.recipe)
+            except AttributeError:
+                pass
+        return recipes
+
     def get(self, request, search_term, format=None):
-        items = Recipe.objects.filter(name__iregex=r'(' + search_term + ')+')
+        items = self.search_recipes(search_term)
         serializer = RecipeFullSerializer(items, many=True)
         return Response(serializer.data)
 
