@@ -84,6 +84,14 @@ class ItemSearch(APIView):
         serializer = ItemSerializer(items, many=True)
         return Response(serializer.data)
 
+class RecipeSearch(APIView):
+    renderer_classes = (JSONRenderer, )
+
+    def get(self, request, search_term, format=None):
+        items = Recipe.objects.filter(name__iregex=r'(' + search_term + ')+')
+        serializer = RecipeFullSerializer(items, many=True)
+        return Response(serializer.data)
+
 #rewrite for creates
 #one create update destroy view and one retrieve view
 #use mixins for cud and generics for r
