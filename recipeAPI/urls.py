@@ -4,6 +4,7 @@ from recipeAPI import views
 
 app_name = 'recipeAPI'
 urlpatterns = [
+    url(r'^$', views.docs, name='docs'),
     url(r'^recipes/(?P<pk>[A-Za-z_\']+)/$', views.RecipeDetail.as_view(), name='recipe_detail'),
     url(r'^items/(?P<pk>[A-Za-z_\']+)/$', views.ItemDetail.as_view(), name='item_detail'),
     url(r'^items/$', views.ItemList.as_view(), name='item_list'),

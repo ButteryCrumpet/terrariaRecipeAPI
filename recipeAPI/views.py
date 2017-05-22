@@ -11,6 +11,10 @@ from recipeAPI.serializers import WriteableRecipeSerializer, ItemSerializer, Rec
 import logging
 logger = logging.getLogger('print')
 # Create your views here.
+
+def docs(request):
+    return render(request, 'recipeAPI/docs.html')
+
 class RecipeDetail(APIView):
     renderer_classes = (JSONRenderer,)
 
@@ -101,6 +105,7 @@ class RecipeSearch(APIView):
         items = self.search_recipes(search_term)
         serializer = RecipeFullSerializer(items, many=True)
         return Response(serializer.data)
+
 
 #rewrite for creates
 #one create update destroy view and one retrieve view
